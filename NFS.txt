@@ -1,0 +1,32 @@
+1) check nfs is installed
+rpm -qa | grep nfs
+2) create folder for sharing
+mkdir /xyz
+3) go inside that folder to create files
+cd xyz
+4) create two files
+touch r1 r2
+5) edit /etc/exports file
+vi /etc/exports
+add following line
+/xyz *(rw,no_root_squash)
+6) restart nfs service
+service nfs restart
+7) check ip address using ifconfig
+ifconfig
+suppose it is 192.168.174.130
+8) check shared folders using showmount
+showmount -e 192.168.174.130
+9)change permission of shared folder
+chmod -R 777 /xyz
+10) stop firewall
+service iptables stop
+
+11)open another terminal
+12)create new folder for mounting shared folder
+mkdir /client
+13) mount shared folder using mount command
+mount -t nfs 192.168.174.130/xyz /client
+14) display content of client folder
+ls /client
+

@@ -1,0 +1,87 @@
+Extra steps:
+Settings to be done in Windows
+Go to “My Computer” -> “Network” -> Right Click on “Properties”
+Go to the option “Change adapter settings” -> Right click on “VMWare Network Adapter VMnet1” -> Click “IPV4” - > Click on “Properties” button -> Set IP Address Example : 192.168.1.1 -> Click “OK” -> Click “Close”.
+
+Right click on “VMWare Network Adapter VMnet8” -> Click “IPV4” - > Click on “Properties” button -> Set IP Address Example : 192.168.1.2 -> Click “OK” -> Click “Close”.
+
+Now Open “VMWare”– Linux Virtual machine
+Set the IP Address to 192.168.1.3 To do so follow the steps :
+Right click on top of “Network symbol” -> Go to “Edit Connections” ->Select “eth0” ->Click on “Edit” button -> Select IPV4 - >Select “Manual” .
+Now set IP Address to 192.168.1.3
+Set the Netmask as 255.255.255.0
+Click on “Apply” button -> Click on “Close” button.
+Now connect your network - > To do so double click on Network icon.
+To check whether IP Address is set :
+# ifconfig
+
+
+
+
+
+1)Enable VMWare Network Adapter on windows machine
+2)check samba is installed on linux
+rpm -qa | grep samba
+3) edit /etc/samba/smb.conf
+add following lines in the end of file.
+
+a) Line no 74: workgroup=MYGROUP To workgroup= WORKGROUP(windows workgroup)
+b) Line no 79: eth0 192.168.1.1/24 192.168.1.3/24 
+c) Line no 80: 127. 192.168.1. 192.168.108.
+
+
+[myshare]
+path=/home/lala
+public=yes
+writeable=yes
+printable =yes
+write list = Admin Administrator
+
+Save the configuration file - > Press Esc Key and type :wq
+
+
+#setsebool samba_enable_home_dirs=1
+
+4) create folder to share
+mkdir /home/lala
+5) go inside folder and create two files
+cd /home/lala
+touch t1 t2
+6) add some content in file 1
+cat > t1
+hello samba
+ctrl+d
+7) change permision of shared folder
+chmod -R 777 /home/lala
+8) restart samba service
+service smb restart
+service smb start
+9) create new user 
+useradd xyz
+10) set password
+smbpasswd -a xyz
+password
+retype password
+
+
+11) check on linux machine
+#smbclient //192.168.1.3/home/lala/ -U xyz
+(-U will prompt username)
+Enter password :
+# service smb restart
+# service nmb start (//start network services)
+
+12) go to windows machine and try to login into shared folder using given username and password.
+
+Go to Windows
+Run Command
+Type ping 192.168.1.3 -t
+Check whether reply and response is working fine.
+
+Now to check whether files are been transferred from Samba to Windows
+Run - > windows + R
+\\192.168.1.3
+It will prompt one dialog box asking for username and password
+
+Now you will be able to see that files are transferred.
+Now create a folder in Windows and check whether files from windows are transferred to Linux

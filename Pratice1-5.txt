@@ -1,0 +1,237 @@
+Linux Journal
+Practical 1: Basic Linux commands
+a) How to Change the Current Date on Your Computer
+Command:    date mmddHHMM 
+example:        date 07161010               // 2-month 2-day 2-hours 2-minutes
+                output command: date 
+
+ 
+b) Create A Directory with The Name /Tempdir. 
+Command:   mkdir dirname [with path]
+Example: mkdir /Tempdir
+Output command: ls /
+ 
+c) Copy All Files From /etc Directory That Start with an a,b,c to /Tempdir Directory.
+Command: cp source destination
+Example: cp    /etc/[abc]*     /Tempdir
+Output command: ls /Tempdir
+ 
+d) Show A Time Sorted List of Contents of The Directory /Tempdir
+command: ls -l --sort=time dirname
+example: ls -l --sort=time /Tempdir
+ 
+
+Practical 2: PROCESS COMMANDS
+a) Managing Process with Ps 
+find process id of process using ps command.
+command : ps -aux    
+or ps -afx 
+ 
+b) Move A Job That Was Started as A Foreground to Background
+step1-> start a new job 
+command:  top
+step2-> pause the job (halt)
+command:   Ctrl+ z
+step3-> move currently paused job to background
+command:  bg
+ 
+step4-> check all background jobs
+command:   jobs
+ 
+step5-> move job back to foreground
+command:   fg 
+step6-> stop or kill running job
+command:  Ctrl+ c
+ 
+c) CHANGE PROCESS PRIORITY using top command
+step1-> start few processes in background
+command:  dd if=/dev/zero of=/dev/null &       // run two four times
+ 
+step2->run top command to see all running processes
+command :  top
+ 
+step3-> press r to change niceness of process (renice option). It will prompt for process id.
+ 
+Step4-> enter process id whose priority you wish to change
+Step5-> now it will prompt you to enter niceness value between [ -19 to 20 ], enter value and press Enter key.
+ 
+ 
+
+
+
+
+
+Practical 3: Partition, Links and Backup Commands
+a) creating primary partition
+step1-> insert pendrive( before starting vm)
+step2-> list device name
+ls -l /dev/sd*
+step3-> clear device content
+dd if=/dev/zero of=/dev/sdb
+step4-> fdisk /dev/sdb
+step5-> press m for menu.  press n for new partition then press p (for primary type)
+step6-> enter partition number: 1
+step7-> for first sector: press enter to choose default
+step8-> for last sector: +20M
+step9-> press p (check all partition)
+
+b) crate an extended partition
+step1-> fdisk /dev/sdb
+step2-> press n for new partition then press e (for extended type)
+step3-> enter partition number: 5
+step4-> for first sector: press enter to choose default
+step5-> for last sector: +20M
+step6-> press p (check all partition)
+
+
+
+c) Create A Hard Link as Well as A Symbolic Link to A File to Demonstrate the Difference
+[for hard link]
+step1-> create one file using following
+             cat > test1.txt
+                 this is hard link test file.
+                 ctrl+D
+
+step2-> create hard link on above file using
+ ln    test1.txt    test1hard.txt    
+step3-> check inode of file and link using  (same inodes)
+ls -il    
+
+step4-> try to access file using hardlink 
+cat test1hard.txt   
+
+step5->delete original file using
+ rm test1.txt   
+step6-> now try to access file using link (file still accessible via hardlink)
+ cat test1hard.txt
+
+ 
+[steps for symbolic link]
+step1-> create new file as
+ cat > testsl1.txt
+this is symbolic link test file.
+ctrl+D
+step2-> create symbolic link 
+ln -s testsl1.txt test1symb.txt 
+step3->  check inode of links   (different inodes)
+ls -il    
+step4-> access file using link
+cat test1symb.txt   
+step 5-> delete file now
+rm testsl1.txt   
+step6-> try to access file using link (gives error)
+cat test1symb.txt 
+ 
+d) create backup
+step1-> create folder to save backup file
+mkdir /back
+step2-> create backup file of /tmp folder and save it in /back folder as tmp.tar file
+tar zcvf /back/tmp.tar  /tmp
+
+ 
+step3-> go inside/back folder
+ cd /back
+step4-> check content of /back folder 
+ls
+step5-> unzip content of tar file
+tar xvf tmp.tar
+step6->check content again 
+ls
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Practical 4: Working With Users, Groups, And Permissions
+a. create a user 'xyz' and a group 'g1' using command.
+useradd xyz
+groupadd g1
+ 
+
+b. Add user 'xyz' to group 'g1'
+usermod -aG g1 xyz
+id xyz
+ 
+c. create two directories /data/sales and /data/support.
+mkdir -p /data/sales
+mkdir -p /data/support
+ 
+d. change group ownership of these directories to group 'g1'.
+chgrp g1 /data/sales
+chgrp g1 /data/support
+ 
+
+
+e. create group tyit such that members of tyit can share files in /shared group directory
+mkdir /shared
+ls -l
+chmod 3770 /shared
+groupadd tyit
+chgrp tyit /shared
+ls -l
+ 
+ 
+
+
+Practical 5: Firewall and Iptables Command
+Steps:
+1) iptables -L -v         # to check current rules
+ 
+2) iptables -P INPUT ACCEPT
+3) iptables -P OUTPUT ACCEPT
+4) iptables -P FORWARD ACCEPT
+5)iptables -F   #flush previous rules
+ 
+
+6) iptables -P INPUT DROP
+7) iptables -P OUTPUT DROP
+8) iptables -P FORWARD DROP
+9)iptables -L -v  #check current rules
+ 
+10)configure rules on loopback interface
+iptables -A INPUT -i lo -j ACCEPT
+11)make ssh accept
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+ 
+12)to change state to established
+iptables -A OUTPUT -m state --state ESTABLISHED -j ACCEPT
+13)accept input from port 80 (http)
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+14)allow multiport accept
+iptables -A INPUT -m multiport -p tcp --port 21,22 -j ACCEPT
+15)confirm all rules with iptables -L -v
+ 
+
+
+
+
+
+
+
+
+
+

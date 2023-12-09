@@ -1,0 +1,83 @@
+to check
+#rpm –qa | grep vsftpd
+
+to install
+#rpm – ivh vsftpd*
+#rpm –ivh ftp*
+
+# chkconfig vsftpd on
+
+go to folder
+# cd /var/ftp/pub/
+
+create new file
+#cat > ftpfile
+this is ftp testing file
+
+ctrl +d
+
+verify ip address
+#ifconfig
+
+open configuration file and make following changes
+#vi /etc/vsftpd/vsftpd.conf
+Uncomment anonymous _enable = YES
+Uncomment local_enable = YES
+Uncomment anonymous_upload_enable = YES
+Uncomment listen = YES
+save changes esc:wq!
+
+restart service
+#service vsftpd restart
+
+open another terminal
+login with IP address as anonymous user
+
+# ftp 192.168.1.1
+
+prompt will change to ftp>
+
+ftp> ls -a
+
+To Log off from ftp we use bye command
+
+Now allow ftp anonymous write enable as follows:
+#getsebool –a | grep ftp
+#setsebool –P allow_ftp_annon_write on or = 1
+#getsebool –a | grep ftp
+
+
+Allow System user to get access to ftp server.
+#getsebool –a | grep ftp
+#setsebool –P ftp_home_dir on
+#getsebool –a | grep ftp
+
+By default /var/ftp is ftp user Home directory. Check the context of file
+/var/ftp/pub and change to ftp
+#ls –ldz /var/ftp/pub
+#chgrp ftp /var/ftp/pub
+#chown ftp /var/ftp/pub
+#ls –ldz /var/ftp/pub
+
+now go to pub directory and create one file.
+#cd /var/ftp/pub
+#touch T1 T2 T3
+#cat > ftptest
+Now FTP is configure.Test as FTP client from other machine. Use the following command.
+#ftp 192.168.1.1
+Prepared By :1) Prof. Sweta Chheda 2) Prof. Jagdish Sanas Page 151
+Welcome to ftp server
+To save the document use ctrl+d
+
+Restart the service of vsftpd
+
+#service vsftpd restart
+#chkconfig vsftpd on
+
+
+Now FTP is configure.Test as FTP client from other machine. Use the following command.
+#ftp 192.168.1.1
+
+
+
+
