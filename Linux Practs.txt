@@ -1,0 +1,241 @@
+LINUX PRACTICALS
+Practical 1
+BASIC COMMANDS
+Q1)Find the files with size greater than 10 MB
+Command:- find / -size +10M
+
+Q2)Display time sorted list of time
+command :- ls –l –sort=time
+
+Q3)Copy all the files starting with a,b or c from /etc to /tempdir
+Command:- mkdir /tempdir
+cp /etc/[abc]* /tempdir
+ls /tempdir
+
+Practical 2
+Process management command
+Q1)Create dd if = /dev /zero of=/dev/null process two times as a
+background job
+Command :- dd if = /dev /zero of=/dev/null &
+dd if = /dev /zero of=/dev/null &
+jobs
+
+Q2)Find the PID of the two dd processes
+Command:- ps
+
+Q3) Change nice value of first processes
+Command :- top
+Press r on PID
+Type 5 or -19 , and press Enter
+
+Q4) Kill the two processes created in (a)
+Command :- ps
+Kill PID
+Kill PID
+
+Q5) Perform steps to move a job from foreground to background and
+background to foreground
+Command:- system-config-users
+
+Command:- continue
+Ctrl + z
+bg
+jobs
+fg
+Ctrl + c
+
+Practical 3
+User and Group management commands
+Q1)Create a user ‘xyz’, a group ‘g1’ using command . Add user ‘xyz’
+to group ‘g1’.
+Command:- useradd xyz
+groupadd g1
+usermod –aG g1 xyz
+lid xyz
+
+Q2) Create two directories /data/sales and /data/support. Change
+the group ownership of these directories to group ‘g1’
+Command :- mkdir –p /data/sales
+mkdir – p/data/support
+ls –l /data
+chgrp g1 /data/sales
+chgrp g1 /data/support
+ls –l /data
+chown xyz /data/sales
+ls –l /data
+
+Q3) Create group tyit such that member of tyit can share the files in
+shared group directory
+Command :- groupadd tyit
+mkdir /shared
+chmod 3770 /shared
+chgrp tyit /shared
+ls –l /
+
+Practical 4
+File sharing with NFS
+1)Check nfs is installed
+Command :- rpm –qa | grep nfs
+Mkdir /tyit44
+cd /tyit44
+touch r1 r2
+
+5)edit /etc/exports file
+Command:- vi /etc/exports
+
+Add following line
+/tyit44 *(rw,no_root_squash)
+Esc :wq---- to come out of vi editor
+
+6)Restart nfs service
+Command:- service nfs restart
+
+7)Check ip address using ifconfig
+Command:- ifconfig
+If address not there then use this command:Ifconfig eth0 192.168.1.3
+
+9) change permission of shared folder
+chmod –R 777 /tyit44
+10)Stop firewall
+service iptables stop
+
+11)Open another terminal
+12) Create new folder for mounting shared folder
+mkdir /client
+mount –t nfs 192.168.1.3:/tyit44 /client
+ls /client
+
+Practical 5
+Firewall and iptables Command
+Iptables –L –v
+Iptables –P INPUT ACCEPT
+Iptables –P OUTPUT ACCEPT
+Iptables –P FORWARD ACCEPT
+Iptables –F
+Iptables –P INPUT DROP
+Iptables –P OUTPUT DROP
+Iptables –P FORWARD DROP
+Iptables –F
+Iptbles –L –v
+Iptables –A INPUT –i lo –j ACCEPT
+Iptables –A INPUT –p tcp -- dport 22 –j ACCEPT
+Iptables –A OUTPUT –m state -- state ESTABLISHED –j ACCEPT
+Iptables –A INPUT –p tcp -- dport 80 –j ACCEPT
+Iptables –A INPUT –m multiport –p tcp --port 21,22 –j ACCEPT
+Iptables –L –v
+
+Practical 6
+Samba
+rpm –qa | grep samba
+
+Setsebool samba_enable_home_dirs=1
+
+4)create folder to share
+Mkdir /home/lala
+5)Go inside folder and create two files
+Cd /home /lala
+
+6)Add some content in file 1
+Cat > t1
+HELLO SAMBA
+Ctrl+d
+Cd to come out
+
+7)change permission of shared folder
+Chmod –R 777 /home/lala
+8) restart samba service
+Service smb restart
+Service smb start
+
+9) create new user
+Useradd sambauser
+10)set password
+Smbpasswd –a sambauser
+
+11)check on linux machine
+
+Practical 7
+Share script to add two numbers
+Vi sum
+Sum=$(($1 + $2))
+Echo “sum=$sum”
+
+Chmod u+x sum
+./sum 5 7
+
+2) Write a share script pattern matching on date string
+Vi checkdate
+INPUTDT=”$1”
+If[[$INPUTDT=~^[0-9]{4}-[0-9]{2}-[0-9]{2}$]];
+Echo”The input $INPUTDT is in the yyyy-mm-dd date format”
+Else
+Echo”The input is NOT in the yyyy-mm-dd date format.”
+Fi
+Esc :wq
+
+3)Write a script to create a counter and display counter
+Vi count
+
+Practical 8
+Configure Apache
+Step 1:- Create index.html file in folder
+vi /var/www/html/index.html
+Step 2:- type content in it
+<html>
+<body>
+NAME And ROLL NO
+</body>
+</html>
+
+Step 3:- restart httpd service
+Service httpd restart
+
+Step 4:- open browser and type http://localhost to see the output of
+index.html page
+
+Php
+Step 1:- create index.html file in folder
+vi /var/www/html/index.html
+
+Step 2:- type content in it
+<html>
+<body>
+NAME AND ROLL NO
+<a href =”home.php”>Home</a>
+</body>
+</html>
+
+Vi /var/www/html/home.php
+<? Echo “welcome to php” ?>
+
+Step 3:- restart httpd service
+Service httpd restart
+
+Step 4:- open browser and type http://:localhost to see the output of
+index.html page
+
+3rd question
+Step 1:-vi /abc
+
+counter=0
+while ps aux | grep httpd | grep –v grep> /dev/null
+do
+counter=$((counter +1 ))
+sleep 1
+echo counter is $counter
+done
+logger HTTPMONITOR:httpd stopped at `date`
+
+service httpd start
+chmod u+x abc
+./abc
+
+Practical 9
+Configuring booting with GRUB
+Step 1: edit grub.conf file
+Vi /boot/grub/grub.conf
+Step 2: change the title attribute add your name there.
+
+Step 3: restart system to see your name on boot screen.
+
+
